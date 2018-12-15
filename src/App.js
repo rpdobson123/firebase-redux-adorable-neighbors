@@ -1,28 +1,21 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
-
+import React, { Component } from "react";
+import "./App.css";
+import NeighborManager from "./NeighborManager";
+import { connect } from "react-redux";
+import { firestoreConnect } from "react-redux-firebase";
+import { compose } from "redux";
 class App extends Component {
   render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
+    return <NeighborManager neighbors={this.props.neighbors} />;
   }
 }
 
-export default App;
+const mapStateToProps = state => {
+  console.log(state);
+  return { neighbors: state.firestore.ordered.neighbors };
+};
+
+export default compose(
+  connect(mapStateToProps),
+  firestoreConnect([{ collection: "neighbors" }])
+)(App);
